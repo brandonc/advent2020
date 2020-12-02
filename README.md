@@ -1,8 +1,6 @@
 # Advent of Code 2020
 
----
-
-By me using go
+Examples in go
 
 build:
 
