@@ -4,7 +4,7 @@ Examples in go
 
 build:
 
-`make build`
+`make`
 
 usage:
 
