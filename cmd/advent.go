@@ -8,6 +8,7 @@ import (
 	"github.com/brandonc/advent2020/pkg/day01"
 	"github.com/brandonc/advent2020/pkg/day02"
 	"github.com/brandonc/advent2020/pkg/day03"
+	"github.com/brandonc/advent2020/pkg/day04"
 )
 
 func printUsage() {
@@ -38,6 +39,8 @@ func main() {
 		day02.Run(file)
 	case "03":
 		day03.Run(file)
+	case "04":
+		day04.Run(file)
 	default:
 		printUsage()
 	}
