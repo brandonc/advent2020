@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"bytes"
 	"io"
+	"io/ioutil"
+	"log"
 	"os"
 	"strconv"
 )
@@ -100,4 +102,32 @@ func Abs(x int) int {
 		return -x
 	}
 	return x
+}
+
+// WriteTempFileOrDie creates and opens a file using the string provided as its contents
+func WriteTempFileOrDie(example string) *os.File {
+	tmpfile, err := ioutil.TempFile("", "example")
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
+
+	if _, err := tmpfile.WriteString(example); err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
+
+	if err := tmpfile.Close(); err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
+
+	file, err := os.Open(tmpfile.Name())
+
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
+
+	return file
 }

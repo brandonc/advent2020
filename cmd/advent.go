@@ -10,6 +10,7 @@ import (
 	"github.com/brandonc/advent2020/pkg/day03"
 	"github.com/brandonc/advent2020/pkg/day04"
 	"github.com/brandonc/advent2020/pkg/day05"
+	"github.com/brandonc/advent2020/pkg/day06"
 )
 
 func printUsage() {
@@ -23,11 +24,13 @@ func main() {
 		// Filename given
 		var err error
 		file, err = os.Open(os.Args[2])
-
+		
 		if err != nil {
 			log.Fatal(err)
 			os.Exit(1)
 		}
+		
+		defer file.Close()
 	} else if len(os.Args) < 2 {
 		printUsage()
 		os.Exit(1)
@@ -44,6 +47,8 @@ func main() {
 		day04.Run(file)
 	case "05":
 		day05.Run(file)
+	case "06":
+		day06.Run(file)
 	default:
 		printUsage()
 	}
