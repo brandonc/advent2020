@@ -6,7 +6,7 @@ import (
 	"os"
 	"sort"
 
-	"github.com/brandonc/advent2020/tools"
+	"github.com/brandonc/advent2020/pkg/tools"
 )
 
 // Run runs day01 challenge using the specified input

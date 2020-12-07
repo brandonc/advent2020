@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/brandonc/advent2020/tools"
+	"github.com/brandonc/advent2020/pkg/tools"
 )
 
 // Run runs the day 4 advent of code challenge

@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/brandonc/advent2020/tools"
+	"github.com/brandonc/advent2020/pkg/tools"
 )
 
 // Run runs the day 02 challenge on the specified input

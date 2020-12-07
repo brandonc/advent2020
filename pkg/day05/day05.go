@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/brandonc/advent2020/tools"
+	"github.com/brandonc/advent2020/pkg/tools"
 )
 
 // Run runs the day 5 advent of code challenge using the specified input

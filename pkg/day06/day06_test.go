@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/brandonc/advent2020/tools"
+	"github.com/brandonc/advent2020/pkg/tools"
 )
 
 // TestRun calls day06.Run with an example

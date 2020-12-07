@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/brandonc/advent2020/tools"
+	"github.com/brandonc/advent2020/pkg/tools"
 )
 
 func affirmatives(lines []string) []int {
