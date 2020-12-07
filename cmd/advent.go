@@ -11,6 +11,7 @@ import (
 	"github.com/brandonc/advent2020/pkg/day04"
 	"github.com/brandonc/advent2020/pkg/day05"
 	"github.com/brandonc/advent2020/pkg/day06"
+	"github.com/brandonc/advent2020/pkg/day07"
 )
 
 func printUsage() {
@@ -49,6 +50,8 @@ func main() {
 		day05.Run(file)
 	case "06":
 		day06.Run(file)
+	case "07":
+		day07.Run(file)
 	default:
 		printUsage()
 	}

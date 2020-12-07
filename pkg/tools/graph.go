@@ -2,60 +2,64 @@ package tools
 
 // Graph represents a directed acyclical graph
 type Graph struct {
-	Root Node
+	Nodes []*Node
+	Edges map[*Node][]*Edge
 }
 
 // Node is a node of the graph
 type Node struct {
 	Name string
-	Data int
-	Parent *Node
-	Children []*Node
 }
 
-// Add adds a new child to the node
-func (n *Node) Add(name string, data int) *Node {
-	newNode := Node{
-		Name: name,
-		Data: data,
-		Parent: n,
-		Children: make([]*Node, 0, 2),
-	}
+// Edge is an edge of the graph
+type Edge struct {
+	Parent *Node
+	Child *Node
+	Data int
+}
 
-	n.Children = append(
-		n.Children,
-		&newNode,
-	)
-
+// Add adds a new child to the graph
+func (g *Graph) Add(name string) *Node {
+	newNode := Node{Name: name}
+	g.Nodes = append(g.Nodes, &newNode)
 	return &newNode
 }
 
-// AddNoData adds a new child to the node with no data
-func (n *Node) AddNoData(name string) *Node {
-	return n.Add(name, 0)
+// LookupOrAdd adds a node if it does not exist
+func (g *Graph) LookupOrAdd(name string) *Node {
+	known, ok := g.Lookup(name)
+	if !ok {
+		return g.Add(name)
+	}
+	return known
+}
+
+// AddEdge adds a new edge to a pair of nodes
+func (g *Graph) AddEdge(n1 *Node, n2 *Node, data int) *Edge {
+	newEdge := Edge{Parent: n1, Child: n2, Data: data}
+	if g.Edges == nil {
+		g.Edges = make(map[*Node][]*Edge)
+	}
+
+	if g.Edges[n1] == nil {
+		g.Edges[n1] = make([]*Edge, 0, 2)
+	}
+
+	g.Edges[n1] = append(g.Edges[n1], &newEdge)
+	return &newEdge
+}
+
+// Lookup returns a node by name
+func (g *Graph) Lookup(name string) (*Node, bool) {
+	for _, n := range g.Nodes {
+		if n.Name == name {
+			return n, true
+		}
+	}
+	return nil, false
 }
 
 // NewGraph creates a new Graph object
-func NewGraph(name string, data int) Graph {
-	return Graph{Node{Name: name, Data: data, Children: make([]*Node, 0, 2)}}
-}
-
-// Search performs a depth-first search on the Graph and returns
-// a collection of matching Nodes
-func (g Graph) Search(name string) (<-chan *Node) {
-	chnl := make(chan *Node)
-	go func() {
-		g.Root.search(name, chnl)
-		close(chnl)
-	}()
-	return chnl
-}
-
-func (n *Node) search(name string, chnl chan *Node) {
-	for _, child := range n.Children {
-		child.search(name, chnl)
-	}
-	if n.Name == name {
-		chnl <- n
-	}
+func NewGraph() *Graph {
+	return &Graph{Nodes: make([]*Node, 0, 16)}
 }
