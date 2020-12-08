@@ -42,18 +42,17 @@ func Run(file *os.File) {
 	for change := 0; change < len(lines); change++ {
 		modified := make([]string, len(lines))
 		for i := 0; i < len(lines); i++ {
+			instr := lines[i]
 			if change == i {
 				split := strings.Fields(lines[i])
 				if split[0] == "jmp" {
-					modified[i] = fmt.Sprintf("%s %s", "nop", split[1])
+					instr = fmt.Sprintf("%s %s", "nop", split[1])
 				} else if split[0] == "nop" {
-					modified[i] = fmt.Sprintf("%s %s", "jmp", split[1])
-				} else {
-					modified[i] = lines[i]
+					instr = fmt.Sprintf("%s %s", "jmp", split[1])
 				}
-			} else {
-				modified[i] = lines[i]
 			}
+			
+			modified[i] = instr
 		}
 		variant, err := handheld.NewHandheld(modified)
 
@@ -70,5 +69,5 @@ func Run(file *os.File) {
 		}
 	}
 
-	log.Fatal("no way to change the program to not end in a loop!")
+	log.Fatal("no way to change the program to not end in a loop")
 }
