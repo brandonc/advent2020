@@ -41,23 +41,14 @@ func Run(file *os.File) {
 
 	for change := 0; change < len(lines); change++ {
 		modified := make([]string, len(lines))
-		changed := false
-		for i := 0; i < len(lines); i++ {
-			instr := lines[i]
-			if change == i {
-				split := strings.Fields(lines[i])
-				if split[0] == "jmp" {
-					instr = fmt.Sprintf("%s %s", "nop", split[1])
-					changed = true
-				} else if split[0] == "nop" {
-					instr = fmt.Sprintf("%s %s", "jmp", split[1])
-					changed = true
-				}
-			}
-			
-			modified[i] = instr
-		}
-		if !changed {
+		copy(modified, lines)
+		
+		split := strings.Fields(modified[change])
+		if split[0] == "jmp" {
+			modified[change] = fmt.Sprintf("%s %s", "nop", split[1])
+		} else if split[0] == "nop" {
+			modified[change] = fmt.Sprintf("%s %s", "jmp", split[1])
+		} else {
 			continue
 		}
 
