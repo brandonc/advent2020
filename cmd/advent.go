@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/brandonc/advent2020/day10"
 	"github.com/brandonc/advent2020/pkg/day01"
 	"github.com/brandonc/advent2020/pkg/day02"
 	"github.com/brandonc/advent2020/pkg/day03"
@@ -58,6 +59,8 @@ func main() {
 		day08.Run(file)
 	case "09":
 		day09.Run(file)
+	case "10":
+		day10.Run(file)
 	default:
 		printUsage()
 	}
