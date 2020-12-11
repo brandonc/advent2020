@@ -1,21 +1,29 @@
-package day08
+package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
-	"github.com/brandonc/advent2020/pkg/handheld"
+	"github.com/brandonc/advent2020/internal/handheld"
 	"github.com/brandonc/advent2020/pkg/tools"
+	"github.com/spf13/cobra"
 )
 
-// Run runs the day 08 challenge on the specified input
-func Run(file *os.File) {
+func init() {
+	rootCmd.AddCommand(&cobra.Command{
+		Use: "8 [input file]",
+		Short: "Runs the day 8 challenge",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return RunWithArgs(args, day8)
+		},
+	})
+}
+
+func day8(file *os.File) error {
 	reader, err := tools.Readlines(file)
 	if err != nil {
-		log.Fatal(err)
-		return
+		return fmt.Errorf("could not read input file: %w", err)
 	}
 
 	lines := make([]string, 0, 16)
@@ -26,8 +34,7 @@ func Run(file *os.File) {
 	h, err := handheld.NewHandheld(lines)
 
 	if err != nil {
-		log.Fatal(err)
-		return
+		return err
 	}
 
 	v, loop := h.RunUntilLoopDetected()
@@ -35,8 +42,7 @@ func Run(file *os.File) {
 	if (loop) {
 		fmt.Printf("the value of the accumulator after loop is %d (part one)\n", v)
 	} else {
-		log.Fatal("No loop was detected in this instruction")
-		return
+		return fmt.Errorf("No loop was detected in this instruction")
 	}
 
 	for change := 0; change < len(lines); change++ {
@@ -55,17 +61,16 @@ func Run(file *os.File) {
 		variant, err := handheld.NewHandheld(modified)
 
 		if err != nil {
-			log.Fatal(err)
-			return
+			return err
 		}
 
 		variantAcc, variantLoop := variant.RunUntilLoopDetected()
 
 		if !variantLoop {
 			fmt.Printf("the value of the accumulator at the end is %d (part two)\n", variantAcc)
-			return
+			return nil
 		}
 	}
 
-	log.Fatal("no way to change the program to not end in a loop")
+	return fmt.Errorf("no way to change the program to not end in a loop")
 }

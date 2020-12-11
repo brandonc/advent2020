@@ -1,12 +1,22 @@
-package day06
+package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/brandonc/advent2020/pkg/tools"
+	"github.com/spf13/cobra"
 )
+
+func init() {
+	rootCmd.AddCommand(&cobra.Command{
+		Use: "6 [input file]",
+		Short: "Runs the day 6 challenge",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return RunWithArgs(args, day6)
+		},
+	})
+}
 
 func affirmatives(lines []string) []int {
 	answers := make([]int, 27)
@@ -43,13 +53,11 @@ func countAllAffirmatives(answers *[]int, groupCount int) int {
 	return total
 }
 
-// Run runs the day 6 challenge on the specified input
-func Run(file *os.File) {
+func day6(file *os.File) error {
 	scanner, err := tools.Readlines(file)
 
 	if err != nil {
-		log.Fatal(err)
-		return
+		return fmt.Errorf("could not read input file: %w", err)
 	}
 
 	group := []string{}
@@ -72,4 +80,7 @@ func Run(file *os.File) {
 
 	fmt.Printf("Sum of any counts %d (part one)\n", totalAnyAffirmatives)
 	fmt.Printf("Sum of every counts %d (part two)\n", totalAllAffirmatives)
+
+
+	return nil
 }

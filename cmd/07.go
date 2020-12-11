@@ -1,4 +1,4 @@
-package day07
+package cmd
 
 import (
 	"fmt"
@@ -10,7 +10,18 @@ import (
 	"strings"
 
 	"github.com/brandonc/advent2020/pkg/tools"
+	"github.com/spf13/cobra"
 )
+
+func init() {
+	rootCmd.AddCommand(&cobra.Command{
+		Use: "7 [input file]",
+		Short: "Runs the day 7 challenge",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return RunWithArgs(args, day7)
+		},
+	})
+}
 
 type countedBag struct {
 	number int
@@ -86,21 +97,18 @@ func sumContents(g *tools.Graph, parent *tools.Node) int {
 	return sum
 }
 
-// Run runs the day 7 challenge on the specified input
-func Run(file *os.File) {
+func day7(file *os.File) error {
 	scanner, err := tools.Readlines(file)
 
 	if err != nil {
-		log.Fatal(err)
-		return
+		return fmt.Errorf("could not read input file: %w", err)
 	}
 
 	graph := parseGraph(scanner)
 	sg, ok := graph.Lookup("shiny gold")
 
 	if !ok {
-		fmt.Printf("Input does not contain a shiny gold bag")
-		return
+		return fmt.Errorf("Input does not contain a shiny gold bag")
 	}
 
 	found := make(map[*tools.Node]types.Nil)
@@ -118,4 +126,6 @@ func Run(file *os.File) {
 
 	fmt.Printf("there are %d valid containers (part one)\n", len(found))
 	fmt.Printf("shiny gold bag must contain %d other bags (part two)\n", sumContents(graph, sg))
+
+	return nil
 }

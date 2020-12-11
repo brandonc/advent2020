@@ -1,21 +1,29 @@
-package day01
+package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"sort"
 
 	"github.com/brandonc/advent2020/pkg/tools"
+	"github.com/spf13/cobra"
 )
 
-// Run runs day01 challenge using the specified input
-func Run(file *os.File) {
+func init() {
+	rootCmd.AddCommand(&cobra.Command{
+		Use: "1 [input file]",
+		Short: "Runs the day 1 challenge",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return RunWithArgs(args, day1)
+		},
+	})
+}
+
+func day1(file *os.File) error {
 	sorted, err := tools.ReadlinesInts(file)
 
 	if err != nil {
-		log.Fatal(err)
-		return
+		return err
 	}
 
 	sort.Ints(sorted)
@@ -32,9 +40,9 @@ func Run(file *os.File) {
 				sum := sorted[aIndex] + sorted[zIndex] + sorted[xIndex]
 
 				if sum == 2020 {
-					fmt.Printf("%d + %d + %d = 2020\n", sorted[aIndex], sorted[zIndex], sorted[xIndex])
-					fmt.Printf("%d * %d * %d = %d\n", sorted[aIndex], sorted[zIndex], sorted[xIndex], sorted[aIndex] * sorted[zIndex] * sorted[xIndex])
-					return
+					fmt.Printf("%d + %d + %d = 2020 (part one)\n", sorted[aIndex], sorted[zIndex], sorted[xIndex])
+					fmt.Printf("%d * %d * %d = %d (part two)\n", sorted[aIndex], sorted[zIndex], sorted[xIndex], sorted[aIndex] * sorted[zIndex] * sorted[xIndex])
+					return nil
 				}
 
 				if sum > 2020 {
@@ -51,5 +59,5 @@ func Run(file *os.File) {
 		}
 	}
 
-	fmt.Println("No 2020 sum found")
+	return fmt.Errorf("No 2020 sum found")
 }

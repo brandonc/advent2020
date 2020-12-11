@@ -1,4 +1,4 @@
-package day06
+package cmd
 
 import (
 	"os"
@@ -7,7 +7,6 @@ import (
 	"github.com/brandonc/advent2020/pkg/tools"
 )
 
-// TestRun calls day06.Run with an example
 func TestRun(t *testing.T) {
 	file := tools.WriteTempFileOrDie(`abc
 
@@ -28,5 +27,7 @@ b`);
 	defer file.Close()
 	defer os.Remove(file.Name())
 
-	Run(file)
+	if err := day6(file); err != nil {
+		t.Error(err)
+	}
 }

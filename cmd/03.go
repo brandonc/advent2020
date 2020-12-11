@@ -1,12 +1,22 @@
-package day03
+package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/brandonc/advent2020/pkg/tools"
+	"github.com/spf13/cobra"
 )
+
+func init() {
+	rootCmd.AddCommand(&cobra.Command{
+		Use: "3 [input file]",
+		Short: "Runs the day 3 challenge",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return RunWithArgs(args, day3)
+		},
+	})
+}
 
 type vector struct {
 	y int
@@ -26,13 +36,11 @@ func treesAtAngle(treeMap *[]string, angle vector) int {
 	return treeCount
 }
 
-// Run runs the day 3 example using the specified input
-func Run(file *os.File) {
+func day3(file *os.File) error {
 	scanner, err := tools.Readlines(file)
 
 	if err != nil {
-		log.Fatal(err)
-		return
+		return fmt.Errorf("could not read input file: %w", err)
 	}
 
 	// Start of part 1
@@ -44,18 +52,19 @@ func Run(file *os.File) {
 
 	treeCountPartOne := treesAtAngle(&treeMap, vector{1, 3})
 
-	fmt.Printf("Encountered %d trees (first part)\n", treeCountPartOne)
+	fmt.Printf("Encountered %d trees (part one)\n", treeCountPartOne)
 
 	// Start of part 2
 
-	angles := []vector{{1, 1}, {1, 3}, {1, 5}, {1, 7}, {2, 1}}
+	angles := [...]vector{{1, 1}, {1, 3}, {1, 5}, {1, 7}, {2, 1}}
 	multipliedTrees := 1
 
 	for _, v := range angles {
 		i := treesAtAngle(&treeMap, v)
-		fmt.Printf("Encountered %d trees at angle %d, %d\n", i, v.y, v.x)
 		multipliedTrees *= i
 	}
 
-	fmt.Printf("Multiplied trees at various angles %d (second part)\n", multipliedTrees)
+	fmt.Printf("Multiplied trees at various angles %d (part two)\n", multipliedTrees)
+
+	return nil
 }

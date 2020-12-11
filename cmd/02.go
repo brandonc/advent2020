@@ -1,17 +1,26 @@
-package day02
+package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"regexp"
 	"strconv"
 
 	"github.com/brandonc/advent2020/pkg/tools"
+	"github.com/spf13/cobra"
 )
 
-// Run runs the day 02 challenge on the specified input
-func Run(file *os.File) {
+func init() {
+	rootCmd.AddCommand(&cobra.Command{
+		Use: "2 [input file]",
+		Short: "Runs the day 2 challenge",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return RunWithArgs(args, day2)
+		},
+	})
+}
+
+func day2(file *os.File) error {
 	regex := *regexp.MustCompile(`^(\d+)-(\d+) ([a-z]): ([a-z]+)$`)
 
 	valid1st := 0
@@ -19,8 +28,7 @@ func Run(file *os.File) {
 
 	scanner, err := tools.Readlines(file)
 	if err != nil {
-		log.Fatal(err)
-		return
+		return fmt.Errorf("could not read input file: %w", err)
 	}
 	
 	for line := range scanner {
@@ -29,15 +37,13 @@ func Run(file *os.File) {
 		min, err := strconv.Atoi(matches[1])
 
 		if err != nil {
-			log.Fatal(err)
-			return
+			return fmt.Errorf("could not parse min int: %w", err)
 		}
 		
 		max, err := strconv.Atoi(matches[2])
 		
 		if err != nil {
-			log.Fatal(err)
-			return
+			return fmt.Errorf("could not parse max int: %w", err)
 		}
 
 		exhibit := matches[3][0]
@@ -60,6 +66,8 @@ func Run(file *os.File) {
 		}
 	}
 
-	fmt.Printf("There are %d valid passwords (1st part)\n", valid1st)
-	fmt.Printf("There are %d valid passwords (2nd part)\n", valid2nd)
+	fmt.Printf("There are %d valid passwords (part one)\n", valid1st)
+	fmt.Printf("There are %d valid passwords (part two)\n", valid2nd)
+
+	return nil
 }

@@ -1,20 +1,28 @@
-package day05
+package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/brandonc/advent2020/pkg/tools"
+	"github.com/spf13/cobra"
 )
 
-// Run runs the day 5 advent of code challenge using the specified input
-func Run(file *os.File) {
+func init() {
+	rootCmd.AddCommand(&cobra.Command{
+		Use: "5 [input file]",
+		Short: "Runs the day 5 challenge",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return RunWithArgs(args, day5)
+		},
+	})
+}
+
+func day5(file *os.File) error {
 	scanner, err := tools.Readlines(file);
 
 	if err != nil {
-		log.Fatal(err);
-		return
+		return fmt.Errorf("could not read input file: %w", err)
 	}
 
 	highestID := 0
@@ -65,8 +73,10 @@ func Run(file *os.File) {
 			_, okPrev := seatMap[checkID - 1]
 			if !ok && okNext && okPrev {
 				fmt.Printf("Your seat ID is %d (part two)\n", checkID)
-				return
+				return nil
 			}
 		}
 	}
+
+	return fmt.Errorf("could not find seat ID")
 }

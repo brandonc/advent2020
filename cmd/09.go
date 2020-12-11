@@ -1,15 +1,24 @@
-package day09
+package cmd
 
 import (
 	"errors"
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 
 	"github.com/brandonc/advent2020/pkg/tools"
+	"github.com/spf13/cobra"
 )
 
+func init() {
+	rootCmd.AddCommand(&cobra.Command{
+		Use: "9 [input file]",
+		Short: "Runs the day 9 challenge",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return RunWithArgs(args, day9)
+		},
+	})
+}
 
 type fixedQueue struct {
 	Items []int
@@ -101,21 +110,18 @@ func findFirstNumberWithoutSum(file *os.File) (int, error) {
 	return 0, errors.New("no answer found")
 }
 
-// Run runs the day 9 challenge on the specified input
-func Run(file *os.File) {
+func day9(file *os.File) error {
 	answer, err := findFirstNumberWithoutSum(file)
 
 	if err != nil {
-		log.Fatal(err)
-		return
+		return err
 	}
 
 	fmt.Printf("cannot sum %d from previous %d items (part one)\n", answer, PrambleSize)
 
 	all, err := tools.ReadlinesInts(file)
 	if err != nil {
-		log.Fatal(err)
-		return
+		return fmt.Errorf("could not read input file: %w", err)
 	}
 
 	// find longest contiguous sum
@@ -143,9 +149,9 @@ func Run(file *os.File) {
 	min, max, err := minMax(all[longX:longY + 1])
 
 	if err != nil {
-		log.Fatalf("no contiguous sum found in this range: %s", err)
-		return
+		return fmt.Errorf("no contiguous sum found in this range: %w", err)
 	}	
 
 	fmt.Printf("min %d + max %d = %d (part two)\n", min, max, min + max)
+	return nil
 }
